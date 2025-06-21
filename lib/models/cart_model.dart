@@ -1,9 +1,9 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 class CartModel extends ChangeNotifier {
   final List<Map<String, dynamic>> _items = [];
 
-  List<Map<String, dynamic>> get items => List.unmodifiable(_items);
+  List<Map<String, dynamic>> get items => _items;
 
   void addItem(Map<String, dynamic> item) {
     _items.add(item);
@@ -11,14 +11,11 @@ class CartModel extends ChangeNotifier {
   }
 
   void removeItem(Map<String, dynamic> item) {
-    _items.removeWhere((element) => element['idMeal'] == item['idMeal']);
-    notifyListeners();
-  }
-
-  void clearCart() {
-    _items.clear();
+    _items.remove(item);
     notifyListeners();
   }
 
   int get totalItems => _items.length;
+
+  double get totalPrice => _items.length * 15.95; // harga tetap untuk contoh
 }

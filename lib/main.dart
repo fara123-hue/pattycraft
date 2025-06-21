@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:badges/badges.dart' as badges;
+
 import 'header.dart';
 import 'categories.dart';
 import 'hamberger_list.dart';
 import 'burger_page.dart';
-import 'package:provider/provider.dart';
 import 'models/cart_model.dart';
 import 'cart_page.dart';
 
@@ -85,12 +87,23 @@ class _HambergerState extends State<Hamberger> {
               },
             ),
             actions: [
-              IconButton(
-                icon: Icon(Icons.shopping_cart),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (_) => CartPage()),
+              Consumer<CartModel>(
+                builder: (context, cart, _) {
+                  return badges.Badge(
+                    position: badges.BadgePosition.topEnd(top: 0, end: 3),
+                    badgeContent: Text(
+                      cart.totalItems.toString(),
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.shopping_cart),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => CartPage()),
+                        );
+                      },
+                    ),
                   );
                 },
               ),
