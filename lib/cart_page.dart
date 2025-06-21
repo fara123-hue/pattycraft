@@ -9,87 +9,86 @@ class CartPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Keranjang', style: TextStyle(color: Colors.white)),
+        title: Text('Keranjang'),
         backgroundColor: Colors.teal,
-
       ),
       body: cart.items.isEmpty
-          ? Center(
-              child: Text(
-                'Keranjang kamu masih kosong 🛒',
-                style: TextStyle(fontSize: 18),
-              ),
-            )
+          ? Center(child: Text('Keranjang masih kosong 😢'))
           : Column(
               children: [
                 Expanded(
-                  child: ListView.separated(
+                  child: ListView.builder(
                     itemCount: cart.items.length,
-                    separatorBuilder: (_, __) => Divider(),
                     itemBuilder: (context, index) {
                       final item = cart.items[index];
-                      return ListTile(
-                        leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(8),
-                          child: Image.network(
-                            item['strMealThumb'],
-                            width: 60,
-                            height: 60,
-                            fit: BoxFit.cover,
+
+                      return Card(
+                        margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        child: ListTile(
+                          leading: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.network(
+                              item['strMealThumb'] ?? '',
+                              width: 60,
+                              height: 60,
+                              fit: BoxFit.cover,
+                            ),
                           ),
-                        ),
-                        title: Text(
-                          item['strMeal'],
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete_outline),
-                          onPressed: () => cart.removeItem(item),
+                          title: Text(
+                            item['strMeal'] ?? 'Tanpa nama',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Jumlah: ${item['quantity'] ?? 1}"),
+                              if (item['cheeseExtra'] == true)
+                                Text("🧀 Keju ekstra"),
+                              if (item['spicySauce'] == true)
+                                Text("🌶️ Saus pedas"),
+                              if ((item['note'] ?? "").toString().isNotEmpty)
+                                Text("📝 Catatan: ${item['note']}"),
+                            ],
+                          ),
+                          trailing: IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => cart.removeItem(item),
+                          ),
                         ),
                       );
                     },
                   ),
                 ),
+                // TOTAL DAN CHECKOUT
                 Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4)],
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text('Total:', style: TextStyle(fontSize: 14)),
-                          Text(
-                            '\$${cart.totalPrice.toStringAsFixed(2)}',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.teal,
-                            ),
-                          ),
+                          Text("Total Pesanan:", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                          Text("${cart.totalItems} item", style: TextStyle(fontSize: 16)),
                         ],
                       ),
-                      ElevatedButton(
+                      SizedBox(height: 10),
+                      ElevatedButton.icon(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.teal,
-                          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30),
-                          ),
+                          backgroundColor: Colors.orange,
+                          minimumSize: Size(double.infinity, 50),
                         ),
+                        icon: Icon(Icons.payment),
+                        label: Text("Checkout"),
                         onPressed: () {
-                          // Simulasikan proses checkout
                           ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text('Pesananmu sedang diproses!'),
-                            ),
+                            SnackBar(content: Text("Pesanan kamu sedang diproses!")),
                           );
+                          cart.clearCart(); // kosongkan keranjang
                         },
-                        child: Text('Checkout', style: TextStyle(color: Colors.white)),
                       ),
                     ],
                   ),

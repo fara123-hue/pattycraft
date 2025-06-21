@@ -8,11 +8,17 @@ import 'hamberger_list.dart';
 import 'burger_page.dart';
 import 'models/cart_model.dart';
 import 'cart_page.dart';
+import 'models/favorite_model.dart';
+import 'favorite_page.dart';
+import 'models/favorite_model.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => CartModel(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartModel()),
+        ChangeNotifierProvider(create: (_) => FavoriteModel()),
+      ],
       child: MyApp(),
     ),
   );
@@ -149,8 +155,9 @@ class _HambergerState extends State<Hamberger> {
                   icon: Icon(Icons.turned_in),
                   color: Colors.white,
                   onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Bookmark belum tersedia")),
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => FavoritePage()), // ⬅️ ini ditambahkan
                     );
                   },
                 ),

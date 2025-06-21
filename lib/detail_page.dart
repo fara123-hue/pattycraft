@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/cart_model.dart';
+import 'models/favorite_model.dart';
 
 class DetailPage extends StatefulWidget {
   final Map<String, dynamic> meal;
@@ -24,7 +25,24 @@ class _DetailPageState extends State<DetailPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(meal['strMeal'] ?? 'Detail'),
-        backgroundColor: Colors.teal,
+  backgroundColor: Colors.teal,
+  actions: [
+    Consumer<FavoriteModel>(
+      builder: (context, fav, _) {
+        final isFav = fav.isFavorite(meal['strMeal']);
+        return IconButton(
+          icon: Icon(isFav ? Icons.favorite : Icons.favorite_border),
+          color: isFav ? Colors.red : Colors.white,
+          onPressed: () {
+            fav.toggleFavorite(meal);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(isFav ? 'Dihapus dari Favorit' : 'Ditambahkan ke Favorit')),
+            );
+          },
+        );
+      },
+    ),
+  ],
       ),
       body: SingleChildScrollView(
         child: Column(

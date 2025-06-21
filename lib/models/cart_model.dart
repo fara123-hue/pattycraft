@@ -15,7 +15,24 @@ class CartModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearCart() {
+    _items.clear();
+    notifyListeners();
+  }
+
   int get totalItems => _items.length;
 
-  double get totalPrice => _items.length * 15.95; // harga tetap untuk contoh
+  double get totalPrice {
+    double total = 0;
+    for (var item in _items) {
+      double basePrice = 15.95; // Harga default per item
+
+      // Tambahan harga jika ada topping
+      if (item['cheeseExtra'] == true) basePrice += 2.00;
+      if (item['spicySauce'] == true) basePrice += 1.50;
+
+      total += basePrice;
+    }
+    return total;
+  }
 }
