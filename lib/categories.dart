@@ -1,15 +1,19 @@
-// categories.dart
+
 import 'package:flutter/material.dart';
 
 class Categories extends StatefulWidget {
+  final Function(String) onCategorySelected;
+
+  Categories({required this.onCategorySelected});
+
   @override
   _CategoriesState createState() => _CategoriesState();
 }
 
 class _CategoriesState extends State<Categories> {
   int currentSelectedItem = 0;
-  final List<String> categoryNames = [
-    'Burger', 'Pizza', 'Pasta', 'Tacos', 'Sushi', 'Kebab', 'Steak', 'Salad', 'Dessert', 'Drinks'
+  final List<String> categories = [
+    'Burger', 'Pizza', 'Pasta', 'Tacos', 'Sushi', 'Steak', 'Salad', 
   ];
 
   @override
@@ -20,7 +24,7 @@ class _CategoriesState extends State<Categories> {
         margin: EdgeInsets.only(top: 10),
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: categoryNames.length,
+          itemCount: categories.length,
           itemBuilder: (context, index) => Stack(
             children: [
               Column(
@@ -37,7 +41,7 @@ class _CategoriesState extends State<Categories> {
                         setState(() {
                           currentSelectedItem = index;
                         });
-                        // Optional: you could add callback to trigger search by category
+                        widget.onCategorySelected(categories[index].toLowerCase());
                       },
                       child: Card(
                         color: index == currentSelectedItem
@@ -70,7 +74,7 @@ class _CategoriesState extends State<Categories> {
                   child: Row(
                     children: [
                       Spacer(),
-                      Text(categoryNames[index]),
+                      Text(categories[index]),
                       Spacer(),
                     ],
                   ),

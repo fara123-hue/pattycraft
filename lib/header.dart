@@ -1,8 +1,8 @@
-// header.dart
 import 'package:flutter/material.dart';
 
 class Header extends StatefulWidget {
   final Function(String) onSearch;
+
   Header({required this.onSearch});
 
   @override
