@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:pattycraft/burger_page.dart';
 import 'package:pattycraft/services/api_service.dart';
 import 'package:provider/provider.dart';
 import 'models/cart_model.dart';
+import 'detail_page.dart';
 
 class HamburgersList extends StatefulWidget {
   final String query;
@@ -64,9 +64,11 @@ class _HamburgersListState extends State<HamburgersList> {
                       margin: EdgeInsets.only(left: 20),
                       child: GestureDetector(
                         onTap: () {
-                          Navigator.of(context).pushNamed(
-                            BurgerPage.tag,
-                            arguments: meal,
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => DetailPage(meal: meal),
+                            ),
                           );
                         },
                         child: Card(
