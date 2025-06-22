@@ -10,7 +10,10 @@ import 'models/cart_model.dart';
 import 'cart_page.dart';
 import 'models/favorite_model.dart';
 import 'favorite_page.dart';
-import 'models/favorite_model.dart';
+import 'models/notification_model.dart';
+import 'notification_page.dart';
+import 'splash_screen.dart';
+
 
 void main() {
   runApp(
@@ -18,6 +21,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => CartModel()),
         ChangeNotifierProvider(create: (_) => FavoriteModel()),
+        ChangeNotifierProvider(create: (_) => NotificationModel()),
       ],
       child: MyApp(),
     ),
@@ -39,7 +43,7 @@ class MyApp extends StatelessWidget {
           backgroundColor: Colors.orange,
         ),
       ),
-      home: Hamberger(),
+      home: SplashScreen(),
       routes: {
         BurgerPage.tag: (_) => BurgerPage(),
       },
@@ -66,7 +70,7 @@ class _HambergerState extends State<Hamberger> {
   void _onCategorySelected(String category) {
     setState(() {
       _selectedCategory = category;
-      _searchQuery = category; // update juga query pencarian
+      _searchQuery = category;
     });
   }
 
@@ -85,14 +89,34 @@ class _HambergerState extends State<Hamberger> {
                   context: context,
                   builder: (_) => Container(
                     height: 200,
-                    child: Center(
-                      child: Text("Menu belum tersedia"),
-                    ),
+                    child: Center(child: Text("Menu belum tersedia")),
                   ),
                 );
               },
             ),
             actions: [
+              // Notifikasi
+              Consumer<NotificationModel>(
+                builder: (context, notif, _) {
+                  return badges.Badge(
+                    position: badges.BadgePosition.topEnd(top: 0, end: 3),
+                    badgeContent: Text(
+                      notif.messages.length.toString(),
+                      style: TextStyle(color: Colors.white, fontSize: 10),
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.notifications),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => NotificationPage()),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+              // Keranjang
               Consumer<CartModel>(
                 builder: (context, cart, _) {
                   return badges.Badge(
@@ -132,38 +156,35 @@ class _HambergerState extends State<Hamberger> {
       ),
       bottomNavigationBar: ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(45)),
-        child: Container(
-          color: Colors.black38,
-          child: BottomAppBar(
-            color: Colors.teal,
-            shape: CircularNotchedRectangle(),
-            child: Row(
-              children: [
-                Spacer(),
-                IconButton(
-                  icon: Icon(Icons.add_alert),
-                  color: Colors.white,
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Tidak ada notifikasi")),
-                    );
-                  },
-                ),
-                Spacer(),
-                Spacer(),
-                IconButton(
-                  icon: Icon(Icons.turned_in),
-                  color: Colors.white,
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => FavoritePage()), // ⬅️ ini ditambahkan
-                    );
-                  },
-                ),
-                Spacer(),
-              ],
-            ),
+        child: BottomAppBar(
+          color: Colors.teal,
+          shape: CircularNotchedRectangle(),
+          child: Row(
+            children: [
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.favorite),
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => FavoritePage()),
+                  );
+                },
+              ),
+              Spacer(),
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.menu_book),
+                color: Colors.white,
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Bookmark belum tersedia")),
+                  );
+                },
+              ),
+              Spacer(),
+            ],
           ),
         ),
       ),

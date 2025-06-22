@@ -23,16 +23,13 @@ class CartModel extends ChangeNotifier {
   int get totalItems => _items.length;
 
   double get totalPrice {
-    double total = 0;
-    for (var item in _items) {
-      double basePrice = 15.95; // Harga default per item
-
-      // Tambahan harga jika ada topping
-      if (item['cheeseExtra'] == true) basePrice += 2.00;
-      if (item['spicySauce'] == true) basePrice += 1.50;
-
-      total += basePrice;
-    }
-    return total;
+  double total = 0;
+  for (var item in _items) {
+    final qty = (item['quantity'] is int) ? item['quantity'] as int : 1;
+    total += qty * 15.95;
   }
+  return total;
+}
+
+
 }

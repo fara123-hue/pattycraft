@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/cart_model.dart';
 import 'models/favorite_model.dart';
+import 'models/notification_model.dart';
 
 class DetailPage extends StatefulWidget {
   final Map<String, dynamic> meal;
@@ -150,6 +151,10 @@ class _DetailPageState extends State<DetailPage> {
                           'spicySauce': _spicySauce,
                           'quantity': _quantity,
                         });
+
+                        Provider.of<NotificationModel>(context, listen: false)
+                          .addMessage("${meal['strMeal']} ditambahkan ke keranjang");
+
 
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
